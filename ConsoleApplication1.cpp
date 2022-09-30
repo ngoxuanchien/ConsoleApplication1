@@ -119,4 +119,4 @@ int main(int argc, char **argv)
 // van chua lam duoc cai khi gi ca, dung la mat thoi gian, gio ma ve nha ngu mot giac mo ve ngoi nha va nhung dua tre thi tot biet may
 //, haiz, dung la doi`,kkkk
 
-// ly hai push o day may con ga
+// ly hai push o day may con ga dhah
