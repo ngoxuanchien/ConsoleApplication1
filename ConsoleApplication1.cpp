@@ -34,7 +34,7 @@ string toHex(int data)
 
 int toDec(string data)
 {
-
+    return 0;
 }
 
 int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
@@ -94,11 +94,11 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
             int cur = 0;
             for (int j = 0; j < _fat32[i]; j++)
             {
-                cur += (int)sector[k];
-                //cout << (int)sector[k] << " ";
+                //cur += (int)sector[k];
+                cout << toHex((int)sector[k]) << " ";
                 k++;
             }
-            cout << cur;
+           // cout << cur;
             cout << endl;
         }
     }
@@ -109,9 +109,10 @@ int main(int argc, char **argv)
 {
     int cur;
     BYTE sector[512];
-    ReadSector(L"\\\\.\\E:", 0, sector);
+    ReadSector(L"\\\\.\\D:", 0, sector);
     // cout << sizeof(_fat32) / sizeof(_fat32[0]);
     return 0;
 }
 
 // chien ga
+// duong de thuong test ne
