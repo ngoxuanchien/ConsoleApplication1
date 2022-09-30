@@ -32,9 +32,27 @@ string toHex(int data)
     return result;
 }
 
-int toDec(string data)
+long long hexToDec(string data)
 {
-    return 0;
+    long long result = 0;
+    
+    int len = data.length();
+    int base = 1;
+    for (int i = len - 1; i >= 0; i--)
+    {
+        if (data[i] >= '0' && data[i] <= '9')
+        {
+            result += ((int)data[i] - 48) * base;
+            base *= 16;
+        }
+        else if (data[i] >= 'A' && data[i] <= 'F')
+        {
+            result += ((int)data[i] - 55) * base;
+            base *= 16;
+        }
+    }
+
+    return result;
 }
 
 int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
