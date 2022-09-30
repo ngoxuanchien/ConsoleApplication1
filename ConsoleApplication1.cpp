@@ -96,8 +96,7 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
             cout << toHex((int)sector[_index + i]) << " ";
         }
 
-        // cout << setw(2) << setfill('0') << (int)sector[11] << " " << setw(2) << setfill('0') << (int)sector[12] << endl;
-        // cout << toHex((int)sector[11]) << " " << toHex((int)sector[12]);
+     
     }
     cout << endl;
 }
@@ -110,4 +109,3 @@ int main(int argc, char **argv)
     return 0;
 }
 
-// alo alo fhaihfkabskvfayfahfkga fafhhafafgiwfgiwagriwgfiwkfg
