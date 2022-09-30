@@ -105,9 +105,11 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
     cout << endl;
 }
 
-void lyhai() {
-    cout << "heelo";
+void xuanchien()
+{
+
 }
+
 int main(int argc, char **argv)
 {
     BYTE sector[512];
