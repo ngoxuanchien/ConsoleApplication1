@@ -103,7 +103,7 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
 }
 
 /// <summary>
-///  
+///
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
@@ -114,7 +114,8 @@ int main(int argc, char **argv)
 
     BYTE sector[512];
     ReadSector(L"\\\\.\\E:", 0, sector);
-    //cout << sizeof(_fat32) / sizeof(_fat32[0]);
+    // cout << sizeof(_fat32) / sizeof(_fat32[0]);
     return 0;
 }
 
+// chien ga
