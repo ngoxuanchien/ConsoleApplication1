@@ -115,4 +115,4 @@ int main(int argc, char **argv)
 }
 
 // chien ga
-// duong de thuong test lan 2
+// duong de thuong x10
