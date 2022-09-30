@@ -15,8 +15,6 @@ string toHex(int data)
 {
     string result = "";
 
-    // cout << data << endl;
-
     while (data > 0)
     {
         int cur = data % 16;
@@ -83,42 +81,63 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
     }
     else
     {
-        int temp = (int)sector[19];
-        // cout << setw(2) << setfill('0') << temp;
-
-        // for (int i = 0; i < 17; i++)
-        //{
-        //     cout << list[i] << " ";
-        // }
-        // cout << endl;
-
-        // for (int i = 0; i < 512; i++)
-        //{
-        //     if ((i + 1) % 17 == 0)
-        //     {
-        //         cout << endl;
-        //     }
-        //     else
-        //     {
-        //         //cout << (char)sector[i] << " ";
-        //         cout << toHex((int)sector[i]) << " ";
-        //         //cout << hex << setw(2) << setfill('0') << (int)sector[i] << " ";
-        //     }
-        // }
-
+        string cur;
         int k = 0;
         for (int i = 0; i < 29; i++)
         {
-            int cur = 0;
+            cur = "";
+
             for (int j = 0; j < _fat32[i]; j++)
             {
-                //cur += (int)sector[k];
-                cout << toHex((int)sector[k]) << " ";
+                switch (i)
+                {
+                case 26:
+                    cur = cur + (char)sector[k];
+                    break;
+                case 2: case 3: case 4: case 5: case 13: case 14: case 17: case 18: case 19: 
+                    cur = toHex((int)sector[k]) + cur;
+                    break;
+                }
+
                 k++;
             }
-           // cout << cur;
-            cout << endl;
+
+            switch (i)
+            {
+            case 2:
+                cout << "So byte tren sector: " << hexToDec(cur) << endl;
+                break;
+            case 3:
+                cout << "So sector tren cluster: " << hexToDec(cur) << endl;
+                break;
+            case 4:
+                cout << "So sector thuoc vung Bootsector (nhu FAT): " << hexToDec(cur) << endl;
+                break;
+            case 5:
+                cout << "So bang FAT: " << hexToDec(cur) << endl;
+                break;
+            case 13:
+                cout << "Kich thuoc volume: " << hexToDec(cur) << endl;
+                break;
+            case 14:
+                cout << "Kich thuoc moi bang FAT: " << hexToDec(cur) << endl;
+                break;
+            case 17:
+                cout << "Cluster bat dau cua RDET: " << hexToDec(cur) << endl;
+                break;
+            case 18:
+                cout << "Sector chua thong tin phu (ve cluster trong), thuong la 1: " << hexToDec(cur) << endl;
+                break;
+            case 19:
+                cout << "Sector chua ban luu cua Boot Sector: " << hexToDec(cur) << endl;
+                break;
+            case 26:
+                cout << "Loai FAT: " << cur << endl;
+                break;
+            }
+
         }
+
     }
     cout << endl;
 }
@@ -131,7 +150,7 @@ void xuanchien()
 int main(int argc, char **argv)
 {
     BYTE sector[512];
-    ReadSector(L"\\\\.\\D:", 0, sector);
+    ReadSector(L"\\\\.\\E:", 0, sector);
     // cout << sizeof(_fat32) / sizeof(_fat32[0]);
     return 0;
 }
