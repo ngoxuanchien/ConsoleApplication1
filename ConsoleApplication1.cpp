@@ -105,6 +105,9 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
     cout << endl;
 }
 
+void lyhai() {
+    cout << "heelo";
+}
 int main(int argc, char **argv)
 {
     BYTE sector[512];
@@ -112,4 +115,3 @@ int main(int argc, char **argv)
     // cout << sizeof(_fat32) / sizeof(_fat32[0]);
     return 0;
 }
-
