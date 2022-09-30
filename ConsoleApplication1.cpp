@@ -102,13 +102,6 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
     cout << endl;
 }
 
-/// <summary>
-///  
-/// </summary>
-/// <param name="argc"></param>
-/// <param name="argv"></param>
-/// <returns></returns>
-
 int main(int argc, char **argv)
 {
 
