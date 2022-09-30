@@ -107,7 +107,6 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
 
 int main(int argc, char **argv)
 {
-    int cur;
     BYTE sector[512];
     ReadSector(L"\\\\.\\D:", 0, sector);
     // cout << sizeof(_fat32) / sizeof(_fat32[0]);
