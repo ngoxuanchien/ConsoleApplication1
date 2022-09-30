@@ -9,7 +9,7 @@ string list[17] = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "
 
 int _fat32[29] = {3, 8, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 4, 4, 4, 2, 2, 4, 2, 2, 12, 1, 1, 1, 4, 11, 8, 420, 2};
 
-constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
 string toHex(int data)
 {
@@ -117,6 +117,7 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
                 cout << "So bang FAT: " << hexToDec(cur) << endl;
                 break;
             case 13:
+                cout << cur << endl;
                 cout << "Kich thuoc volume: " << hexToDec(cur) << endl;
                 break;
             case 14:
@@ -139,18 +140,11 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
         }
 
     }
-    cout << endl;
-}
-
-void xuanchien()
-{
-
 }
 
 int main(int argc, char **argv)
 {
     BYTE sector[512];
     ReadSector(L"\\\\.\\E:", 0, sector);
-    // cout << sizeof(_fat32) / sizeof(_fat32[0]);
     return 0;
 }
