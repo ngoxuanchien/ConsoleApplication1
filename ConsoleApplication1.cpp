@@ -37,6 +37,11 @@ string toHex(int data)
     return result;
 }
 
+int toDec(string data)
+{
+
+}
+
 int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
 {
     int retCode = 0;
@@ -91,11 +96,14 @@ int ReadSector(LPCWSTR drive, int readPoint, BYTE sector[512])
         int k = 0;
         for (int i = 0; i < 29; i++)
         {
+            int cur = 0;
             for (int j = 0; j < _fat32[i]; j++)
             {
-                cout << toHex((int)sector[k]) << " ";
+                cur += (int)sector[k];
+                //cout << (int)sector[k] << " ";
                 k++;
             }
+            cout << cur;
             cout << endl;
         }
     }
