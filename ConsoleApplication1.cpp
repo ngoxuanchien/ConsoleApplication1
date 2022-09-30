@@ -112,3 +112,9 @@ int main(int argc, char **argv)
     // cout << sizeof(_fat32) / sizeof(_fat32[0]);
     return 0;
 }
+
+// chien ga
+// duong de thuong test ne
+//Hom nay la t6 va bay gio dang la 4h chieu, mot thoi diem thich hop de ngu trua, nhma lai phai vac mong^ len YES cafe de chay dl, nhma
+// van chua lam duoc cai khi gi ca, dung la mat thoi gian, gio ma ve nha ngu mot giac mo ve ngoi nha va nhung dua tre thi tot biet may
+//, haiz, dung la doi`,kkkk
