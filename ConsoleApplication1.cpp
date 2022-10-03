@@ -1,16 +1,16 @@
 #include <windows.h>
 #include <iostream>
 #include <iomanip>
+#include "FAT32.h"
 
 using namespace std;
 
+//http://www.cs.rpi.edu/courses/fall01/os/ReadFile.html
+
 string list[17] = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "0D", "0E", "0F"};
-
 int _fat32[29] = {3, 8, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 4, 4, 4, 2, 2, 4, 2, 2, 12, 1, 1, 1, 4, 11, 8, 420, 2};
-
 int _ntfs[22] = { 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 4, 4, 4, 8, 8, 8, 1, 3, 1, 3, 8, 4 };
-
-constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
 string toHex(int data)
 {
@@ -54,9 +54,9 @@ long long hexToDec(string data)
     return result;
 }
 
-int ReadSectorFAT32(LPCWSTR drive, int readPoint, BYTE sector[512])
+FAT32 ReadSectorFAT32(LPCWSTR drive, long long readPoint, BYTE sector[512])
 {
-    int retCode = 0;
+    FAT32 result;
     DWORD bytesRead;
     HANDLE device = NULL;
 
@@ -71,7 +71,7 @@ int ReadSectorFAT32(LPCWSTR drive, int readPoint, BYTE sector[512])
     if (device == INVALID_HANDLE_VALUE) // Open Error
     {
         printf("CreateFile: %u\n", GetLastError());
-        return 1;
+        return result;
     }
 
     SetFilePointer(device, readPoint, NULL, FILE_BEGIN); // Set a Point to Read
@@ -86,7 +86,7 @@ int ReadSectorFAT32(LPCWSTR drive, int readPoint, BYTE sector[512])
         int k = 0;
         for (int i = 0; i < 29; i++)
         {
-            cur = "";
+            cur = ""; 
 
             for (int j = 0; j < _fat32[i]; j++)
             {
@@ -106,44 +106,131 @@ int ReadSectorFAT32(LPCWSTR drive, int readPoint, BYTE sector[512])
             switch (i)
             {
             case 2:
-                cout << "So byte tren sector: " << hexToDec(cur) << endl;
+                result.setSizeSector(hexToDec(cur));
+                //cout << "So byte tren sector: " << result.getSizeSector() << endl;
                 break;
             case 3:
-                cout << "So sector tren cluster: " << hexToDec(cur) << endl;
+                result.setSizeCluster(hexToDec(cur));
+                //cout << "So sector tren cluster: " << result.getSizeCluster() << endl;
                 break;
             case 4:
-                cout << "So sector thuoc vung Bootsector (nhu FAT): " << hexToDec(cur) << endl;
+                result.setSizeBootSector(hexToDec(cur));
+                //cout << "So sector thuoc vung Bootsector (nhu FAT): " << result.getSizeBootSector() << endl;
                 break;
             case 5:
-                cout << "So bang FAT: " << hexToDec(cur) << endl;
+                result.setFAT(hexToDec(cur));
+                //cout << "So bang FAT: " << result.getFAT() << endl;
                 break;
             case 13:
-                cout << "Kich thuoc volume: " << hexToDec(cur) << endl;
+                result.setSizeVolume(hexToDec(cur));
+                //cout << "Kich thuoc volume: " << result.getSizeVolume() << endl;
                 break;
             case 14:
-                cout << "Kich thuoc moi bang FAT: " << hexToDec(cur) << endl;
+                result.setSizeFAT(hexToDec(cur));
+                //cout << "Kich thuoc moi bang FAT: " << result.getSizeFAT() << endl;
                 break;
             case 17:
-                cout << "Cluster bat dau cua RDET: " << hexToDec(cur) << endl;
+                //cout << "Cluster bat dau cua RDET: " << hexToDec(cur) << endl;
                 break;
             case 18:
-                cout << "Sector chua thong tin phu (ve cluster trong), thuong la 1: " << hexToDec(cur) << endl;
+                //cout << "Sector chua thong tin phu (ve cluster trong), thuong la 1: " << hexToDec(cur) << endl;
                 break;
             case 19:
-                cout << "Sector chua ban luu cua Boot Sector: " << hexToDec(cur) << endl;
+                //cout << "Sector chua ban luu cua Boot Sector: " << hexToDec(cur) << endl;
                 break;
             case 26:
-                cout << "Loai FAT: " << cur << endl;
+                result.setTypeFAT(cur);
+                //cout << "Loai FAT: " << cur << endl;
                 break;
             }
 
         }
+
+        result.setDataLocation(result.getSizeBootSector() + result.getFAT() * result.getSizeFAT());
+        result.setFatLocation(result.getSizeBootSector());
     }
+
+    readPoint = result.getDataLocaiton() * result.getSizeSector();
+    
+    int k = 0;
+    while (readPoint < result.getSizeVolume() * result.getSizeSector())
+    {
+        //k++;
+        SetFilePointer(device, readPoint, NULL, FILE_BEGIN);
+        //cout << result.getSizeVolume() * result.getSizeSector() << endl;
+
+        if (!ReadFile(device, sector, 512, &bytesRead, NULL))
+        {
+            printf("ReadFile: %u\n", GetLastError());
+        }
+        else
+        {
+            /*for (int i = 0; i < 512; i++)
+            {
+                if ((i + 1) % 16 == 0)
+                {
+                    if ((i + 1) % 32 == 0)
+                    {
+                        cout << endl;
+                    }
+                    cout << endl;
+                }
+                else
+                {
+                    cout << (char)sector[i] << " ";
+                }
+                
+            }*/
+
+            string cur = "";
+            for (int i = 0; i < 512; i += 32)
+            {
+                //cout << toHex(sector[i + 11]) << endl;
+                
+                if (toHex(sector[i + 11]).compare("0F") == 0)
+                {
+                    cur = "";
+                    //cout << 1;
+                    for (int j = i + 1; j < i + 11; j++)
+                    {
+                        cur = cur + (char)sector[j];
+                    }
+
+                    for (int j = i + 14; j < i + 26; j++)
+                    {
+                        cur = cur + (char)sector[j];
+                    }
+
+                    for (int j = i + 28; j < i + 32; j++)
+                    {
+                        cur = cur + (char)sector[j];
+                    }
+                    result.addFile(cur);
+                }
+                else if (toHex(sector[i + 11]).compare("20") == 0)
+                {
+                    cur = "";
+                    for (int j = i; j < i + 11; j++)
+                    {
+                        cur = cur + (char)sector[j];
+                    }
+                    result.addFile(cur);
+                }
+                
+            }
+          /*  cout << endl;
+            cout << dem << endl;*/
+        }
+
+        readPoint += 512 * result.getSizeSector();
+        //return result;
+    }
+
+    return result;
 }
 
 int ReadSectorNTFS(LPCWSTR drive, int readPoint, BYTE sector[512])
 {
-    int retCode = 0;
     DWORD bytesRead;
     HANDLE device = NULL;
 
@@ -229,14 +316,18 @@ int ReadSectorNTFS(LPCWSTR drive, int readPoint, BYTE sector[512])
             }
         }
     }
+    return 1;
 }
 
 int main(int argc, char **argv)
 {
     BYTE sector[512];
-    ReadSectorFAT32(L"\\\\.\\D:", 0, sector);
-    cout << endl;
-    ReadSectorNTFS(L"\\\\.\\E:", 0, sector);
+    FAT32 result = ReadSectorFAT32(L"\\\\.\\D:", 0, sector);
+    result.xuat();
+    //cout << endl;
+    //ReadSectorNTFS(L"\\\\.\\E:", 0, sector);
     //cout << hexToDec("50");
+
+    
     return 0;
 }
