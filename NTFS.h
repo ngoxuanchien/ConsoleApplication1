@@ -1,6 +1,5 @@
 #pragma once
 #include "Volume.h"
-#include <vector>
 #include <windows.h>
 #include <iostream>
 #include "Volume.h"
@@ -22,10 +21,6 @@ private:
 	ll _clusterPerIndexBlock;
 	string _serialNnumberVolume;
 
-	long long MFT_location;
-	long long MFT_Reserved_location;
-	long long Data_location;
-	long long NotUsed_location;
 public:
 	NTFS();
 	NTFS(LPCWSTR);
