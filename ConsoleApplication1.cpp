@@ -1,4 +1,5 @@
 #include "FAT32.h"
+#include "NTFS.h"
 
 using namespace std;
 
@@ -97,8 +98,9 @@ using namespace std;
 
 int main()
 {
-    FAT32 result(L"\\\\.\\D:");
+    NTFS result(L"\\\\.\\G:");
     result.xuat();
+     
 
     return 0;
 }
