@@ -1,4 +1,6 @@
-#include "FAT32.h"
+﻿#include "FAT32.h"
+#include <io.h>
+#include <fcntl.h>
 
 using namespace std;
 
@@ -97,8 +99,7 @@ using namespace std;
 
 int main()
 {
-    FAT32 result(L"\\\\.\\D:");
-    result.xuat();
-
+   /* FAT32 result(L"\\\\.\\D:");
+    result.xuat();*/
     return 0;
 }
