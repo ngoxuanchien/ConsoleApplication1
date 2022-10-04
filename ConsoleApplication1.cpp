@@ -1,4 +1,6 @@
-#include "FAT32.h"
+﻿#include "FAT32.h"
+#include <io.h>
+#include <fcntl.h>
 #include "NTFS.h"
 
 using namespace std;

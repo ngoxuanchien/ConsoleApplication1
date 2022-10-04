@@ -11,6 +11,60 @@ FAT32::FAT32()
 	this->_dataLocation = 0;
 }
 
+string hexToASCII(string hex)
+{
+	// initialize the ASCII code string as empty.
+	string ascii = "";
+	for (size_t i = 0; i < hex.length(); i += 2)
+	{
+		// extract two characters from hex string
+		string part = hex.substr(i, 2);
+
+		// change it into base 16 and
+		// typecast as the character
+		char ch = stoul(part, nullptr, 16);
+
+		// add this char to final ASCII string
+		ascii += ch;
+	}
+	return ascii;
+}
+
+int readSector(LPCWSTR drive, int readPoint, BYTE sector[512])
+{
+	
+
+	DWORD bytesRead;
+	HANDLE device = NULL;
+
+    device = CreateFile(drive,              // Drive to open
+		GENERIC_READ,                       // Access mode
+		FILE_SHARE_READ | FILE_SHARE_WRITE, // Share Mode
+	    NULL,                               // Security Descriptor
+        OPEN_EXISTING,                      // How to 
+		0,                                  // File attributes
+	    NULL);                              // Handle to template
+	
+    if (device == INVALID_HANDLE_VALUE) // Open 
+	{
+		printf("CreateFile: %u\n", GetLastError());
+		return 0;
+	}
+
+	SetFilePointer(device, readPoint, NULL, FILE_BEGIN); // Set a Point to Read	
+    
+	if (!ReadFile(device, sector, 512, &bytesRead, NULL))
+	{
+	    printf("ReadFile: %u\n", GetLastError());
+		return 0;	    
+	}
+	else
+	{
+		printf("ReadSuccess\n");
+		return 1;
+	}
+}
+
 FAT32::FAT32(LPCWSTR drive)
 {
 	this->_fat = 0;
@@ -18,94 +72,101 @@ FAT32::FAT32(LPCWSTR drive)
 	this->_sizeBootSector = 0;
 	this->_fatLocation = 0;
 	this->_dataLocation = 0;
-	int readPoint = 0;
 
-	DWORD bytesRead;
-	HANDLE device = NULL;
-	BYTE* sector = new BYTE[512];
+	long long readPoint = 0;
+	
+	BYTE sector[512];
 
-	device = CreateFile(drive,              // Drive to open
-		GENERIC_READ,                       // Access mode
-		FILE_SHARE_READ | FILE_SHARE_WRITE, // Share Mode
-		NULL,                               // Security Descriptor
-		OPEN_EXISTING,                      // How to create
-		0,                                  // File attributes
-		NULL);                              // Handle to template
+	readSector(drive, readPoint, sector);
 
-	if (device == INVALID_HANDLE_VALUE) // Open Error
+	string cur;
+	int k = 0;
+	for (int i = 0; i < 29; i++)
 	{
-		printf("CreateFile: %u\n", GetLastError());
-		return;
-	}
+		cur = "";
 
-	SetFilePointer(device, readPoint, NULL, FILE_BEGIN); // Set a Point to Read
-
-	if (!ReadFile(device, sector, 512, &bytesRead, NULL))
-	{
-		printf("ReadFile: %u\n", GetLastError());
-	}
-	else
-	{
-		string cur;
-		int k = 0;
-		for (int i = 0; i < 29; i++)
+		for (int j = 0; j < _fat32[i]; j++)
 		{
-			cur = "";
-
-			for (int j = 0; j < _fat32[i]; j++)
-			{
-				switch (i)
-				{
-				case 26:
-					cur = cur + (char)sector[k];
-					break;
-				case 2: case 3: case 4: case 5: case 13: case 14: case 17: case 18: case 19:
-					cur = toHex((int)sector[k]) + cur;
-					break;
-				}
-
-				k++;
-			}
-
 			switch (i)
 			{
-			case 2:
-				this->_sizeSector = hexToDec(cur);
-				break;
-			case 3:
-				this->_sizeCluster = hexToDec(cur);
-				break;
-			case 4:
-				this->_sizeBootSector = hexToDec(cur);
-				break;
-			case 5:
-				this->_fat = hexToDec(cur);
-				break;
-			case 13:
-				this->_sizeVolume = hexToDec(cur);
-				break;
-			case 14:
-				this->_sizeFat = (hexToDec(cur));
-				break;
-				//case 17:
-				//    //cout << "Cluster bat dau cua RDET: " << hexToDec(cur) << endl;
-				//    break;
-				//case 18:
-				//    //cout << "Sector chua thong tin phu (ve cluster trong), thuong la 1: " << hexToDec(cur) << endl;
-				//    break;
-				//case 19:
-				//    //cout << "Sector chua ban luu cua Boot Sector: " << hexToDec(cur) << endl;
-				//    break;
 			case 26:
-				this->_typeFat = cur;
+				cur = cur + (char)sector[k];
+				break;
+			case 2: case 3: case 4: case 5: case 13: case 14: case 17: case 18: case 19:
+				cur = toHex((int)sector[k]) + cur;
 				break;
 			}
 
+			k++;
 		}
 
-		this->_dataLocation = this->_sizeBootSector + this->_fat * this->_sizeFat;
-		this->_fatLocation = this->_sizeBootSector;
+		switch (i)
+		{
+		case 2:
+			this->_sizeSector = hexToDec(cur);
+			break;
+		case 3:
+			this->_sizeCluster = hexToDec(cur);
+			break;
+		case 4:
+			this->_sizeBootSector = hexToDec(cur);
+			break;
+		case 5:
+			this->_fat = hexToDec(cur);
+			break;
+		case 13:
+			this->_sizeVolume = hexToDec(cur);
+			break;
+		case 14:
+			this->_sizeFat = (hexToDec(cur));
+			break;
+		case 26:
+			this->_typeFat = cur;
+			break;
+		}
+
 	}
+
+	this->_dataLocation = this->_sizeBootSector + this->_fat * this->_sizeFat;
+	this->_fatLocation = this->_sizeBootSector;
+
+	Sleep(3000);
+	
+	
+	readPoint = this->_fatLocation * this->_sizeSector;
+	//cout << readPoint << endl;
+
+	for (int i = 0; i < this->_sizeFat; i++)
+	{
+		readPoint += i * this->_sizeSector;
+		readSector(drive, readPoint, sector);
+		for (int j = 0; j < 512; j += 4)
+		{
+			if (j != 0 && j % 16 == 0)
+			{
+				cout << endl;
+			}
+
+			 //cout << toHex(sector[j + 3]) + toHex(sector[j + 2]) + toHex(sector[j + 1]) + toHex(sector[j]) << " ";
+
+			if (j / 4 > 2)
+			{
+				int readPointCluster = this->_dataLocation * this->_sizeSector;
+				BYTE sector1[512];
+
+				readSector(drive, readPointCluster, sector1);
+
+				for (int k = 0; k < 512; k += 32)
+				{
+
+				}
+				return;
+			}
+		}
+
+		break;
+	}
+	
 }
 
 FAT32::~FAT32()

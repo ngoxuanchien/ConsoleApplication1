@@ -28,7 +28,7 @@
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="File.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="ntfs.cpp">
       <Filter>Resource Files</Filter>

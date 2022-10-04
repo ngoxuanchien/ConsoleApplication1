@@ -3,6 +3,8 @@
 #include <windows.h>
 #include <iostream>
 #include "Volume.h"
+#include "Folder.h"
+#include <map>
 
 using namespace std;
 
@@ -15,6 +17,7 @@ private:
 	string _typeFat;
 	long long _fatLocation;
 	long long _dataLocation;
+	vector<File*> _list;
 
 public:
 	FAT32();

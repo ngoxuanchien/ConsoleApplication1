@@ -9,7 +9,8 @@ protected:
     long long _sizeSector;
     long long _sizeCluster;
     long long _sizeVolume;
-     
+    
+
 
 public:
     Volume();
