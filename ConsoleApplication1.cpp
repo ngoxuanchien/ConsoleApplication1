@@ -99,7 +99,7 @@ using namespace std;
 
 int main()
 {
-   /* FAT32 result(L"\\\\.\\D:");
-    result.xuat();*/
+    FAT32 result(L"\\\\.\\D:");
+    result.xuat();
     return 0;
 }
