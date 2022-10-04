@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 class FAT32 : public Volume
 {
 private:
@@ -16,10 +15,10 @@ private:
 	string _typeFat;
 	long long _fatLocation;
 	long long _dataLocation;
-	vector<string> _listFile;
 
 public:
 	FAT32();
+	FAT32(LPCWSTR);
 	~FAT32();
 	
 	void setFAT(const int&);
@@ -28,7 +27,6 @@ public:
 	void setTypeFAT(const string&);
 	void setFatLocation(const long long&);
 	void setDataLocation(const long long&);
-	void addFile(const string&);
 
 	void xuat();
 

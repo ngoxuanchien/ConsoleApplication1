@@ -21,6 +21,8 @@ public:
     long long getSizeSector();
     long long getSizeCluster();
     long long getSizeVolume();
+    long long hexToDec(string);
+    string toHex(int);
 };
 
 
