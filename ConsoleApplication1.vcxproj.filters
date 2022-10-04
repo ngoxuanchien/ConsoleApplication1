@@ -24,12 +24,24 @@
     <ClCompile Include="Volume.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="Folder.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FAT32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Volume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Folder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

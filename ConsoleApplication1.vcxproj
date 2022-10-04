@@ -129,10 +129,14 @@
   <ItemGroup>
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="FAT32.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="Folder.cpp" />
     <ClCompile Include="Volume.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FAT32.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="Folder.h" />
     <ClInclude Include="Volume.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
