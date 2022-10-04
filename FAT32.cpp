@@ -156,13 +156,8 @@ FAT32::FAT32(LPCWSTR drive)
 
 				readSector(drive, readPointCluster, sector1);
 
-				for (int k = 0; k < 512; k++)
+				for (int k = 0; k < 512; k += 32)
 				{
-					if (k != 0 && k % 16 == 0)
-					{
-						cout << endl;
-					}
-					cout << (char)sector1[k] << " ";
 
 				}
 				return;
